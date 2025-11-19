@@ -15,6 +15,7 @@ const Signup = () => {
       body: JSON.stringify({ email, password, role }),
     });
 
+
     // read and handle the response to avoid unused variable error
     const data = await response.json();
     if (!response.ok) {
