@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsNumber, Min, Max } from 'class-validator';
+import { IsOptional, IsNumber, Min, Max } from 'class-validator';
 
 export class CreateSoilReportDto {
   @IsNumber()
-  @IsNotEmpty()
-  fieldId: number;
+  @IsOptional()
+  fieldId?: number;
 
   @IsNumber()
   @Min(0)
