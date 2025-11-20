@@ -12,6 +12,12 @@ interface SoilReportResponse {
   moisture: number;
   fertilityCategory: string;
   recommendations: string;
+  temperature: number | null;
+  humidity: number | null;
+  windSpeed: number | null;
+  rainfall: number | null;
+  soilMoisture: number | null;
+  soilTemperature: number | null;
   createdAt: string;
 }
 
@@ -335,6 +341,52 @@ const SoilReport = () => {
                 <p className="text-sm text-gray-700 whitespace-pre-line">{result.recommendations}</p>
               </div>
             </div>
+
+            {/* Weather & Climate Data */}
+            {(result.temperature !== null || result.humidity !== null || result.windSpeed !== null ||
+              result.rainfall !== null || result.soilMoisture !== null || result.soilTemperature !== null) && (
+              <div className="mt-6">
+                <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">Weather & Climate Data</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {result.temperature !== null && (
+                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-md">
+                      <span className="text-sm font-medium text-blue-700">Temperature</span>
+                      <span className="text-sm text-blue-600">{result.temperature}°C</span>
+                    </div>
+                  )}
+                  {result.humidity !== null && (
+                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-md">
+                      <span className="text-sm font-medium text-blue-700">Humidity</span>
+                      <span className="text-sm text-blue-600">{result.humidity}%</span>
+                    </div>
+                  )}
+                  {result.windSpeed !== null && (
+                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                      <span className="text-sm font-medium text-green-700">Wind Speed</span>
+                      <span className="text-sm text-green-600">{result.windSpeed} m/s</span>
+                    </div>
+                  )}
+                  {result.rainfall !== null && (
+                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-md">
+                      <span className="text-sm font-medium text-green-700">Rainfall</span>
+                      <span className="text-sm text-green-600">{result.rainfall} mm</span>
+                    </div>
+                  )}
+                  {result.soilMoisture !== null && (
+                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-md">
+                      <span className="text-sm font-medium text-yellow-700">Soil Moisture</span>
+                      <span className="text-sm text-yellow-600">{result.soilMoisture}</span>
+                    </div>
+                  )}
+                  {result.soilTemperature !== null && (
+                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-md">
+                      <span className="text-sm font-medium text-yellow-700">Soil Temperature</span>
+                      <span className="text-sm text-yellow-600">{result.soilTemperature}°C</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

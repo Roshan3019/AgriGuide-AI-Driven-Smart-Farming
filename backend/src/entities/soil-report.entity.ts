@@ -37,6 +37,24 @@ export class SoilReport {
   @Column('text')
   recommendations: string;
 
+  @Column('float', { nullable: true })
+  temperature: number | null;
+
+  @Column('float', { nullable: true })
+  humidity: number | null;
+
+  @Column('float', { nullable: true })
+  windSpeed: number | null;
+
+  @Column('float', { nullable: true })
+  rainfall: number | null;
+
+  @Column('float', { nullable: true })
+  soilMoisture: number | null;
+
+  @Column('float', { nullable: true })
+  soilTemperature: number | null;
+
   @CreateDateColumn()
   createdAt: Date;
 }

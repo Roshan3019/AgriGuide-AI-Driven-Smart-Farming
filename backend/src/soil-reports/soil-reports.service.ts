@@ -6,6 +6,7 @@ import { Field } from '../entities/field.entity';
 import { CreateSoilReportDto } from './dto/create-soil-report.dto';
 import { CreateSoilReportByLocationDto } from './dto/create-soil-report-by-location.dto';
 import { calculateFertilityCategory, generateRecommendations, getMockSoilDataForLocation } from './soil-utils';
+import { OpenMeteoService } from './open-meteo.service';
 
 @Injectable()
 export class SoilReportsService {
@@ -14,6 +15,7 @@ export class SoilReportsService {
     private soilReportsRepository: Repository<SoilReport>,
     @InjectRepository(Field)
     private fieldsRepository: Repository<Field>,
+    private readonly openMeteoService: OpenMeteoService,
   ) {}
 
   async create(createSoilReportDto: CreateSoilReportDto, userId: number): Promise<SoilReport> {
@@ -70,6 +72,9 @@ export class SoilReportsService {
     // Get mock soil data
     const soilData = getMockSoilDataForLocation(latitude, longitude);
 
+    // Fetch real weather data from Open-Meteo
+    const weatherData = await this.openMeteoService.fetchOpenMeteoData(latitude, longitude);
+
     // Find or create field
     let field = await this.fieldsRepository.findOne({ where: { userId } });
     if (!field) {
@@ -109,6 +114,12 @@ export class SoilReportsService {
       moisture: soilData.moisture,
       fertilityCategory,
       recommendations,
+      temperature: weatherData.temperature,
+      humidity: weatherData.humidity,
+      windSpeed: weatherData.windSpeed,
+      rainfall: weatherData.rainfall,
+      soilMoisture: weatherData.soilMoisture,
+      soilTemperature: weatherData.soilTemperature,
     });
 
     return this.soilReportsRepository.save(soilReport);
