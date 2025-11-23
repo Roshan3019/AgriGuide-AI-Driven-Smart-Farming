@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, Min } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, Min, IsOptional } from 'class-validator';
 
 export class CreateFieldDto {
   @IsString()
@@ -12,4 +12,12 @@ export class CreateFieldDto {
   @IsNumber()
   @Min(0.1)
   size: number;
+
+  @IsOptional()
+  @IsNumber()
+  latitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
 }

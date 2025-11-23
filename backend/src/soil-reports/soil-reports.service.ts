@@ -7,6 +7,7 @@ import { CreateSoilReportDto } from './dto/create-soil-report.dto';
 import { CreateSoilReportByLocationDto } from './dto/create-soil-report-by-location.dto';
 import { calculateFertilityCategory, generateRecommendations, getMockSoilDataForLocation } from './soil-utils';
 import { OpenMeteoService } from './open-meteo.service';
+import { SoilGridsService } from '../fields/soilgrids.service';
 
 @Injectable()
 export class SoilReportsService {
@@ -16,6 +17,7 @@ export class SoilReportsService {
     @InjectRepository(Field)
     private fieldsRepository: Repository<Field>,
     private readonly openMeteoService: OpenMeteoService,
+    private readonly soilGridsService: SoilGridsService,
   ) {}
 
   async create(createSoilReportDto: CreateSoilReportDto, userId: number): Promise<SoilReport> {
@@ -78,13 +80,23 @@ export class SoilReportsService {
     // Find or create field
     let field = await this.fieldsRepository.findOne({ where: { userId } });
     if (!field) {
-      // Create default field with location
+      // Create default field with location and coordinates
       field = this.fieldsRepository.create({
         name: 'Default Field',
         location: `${latitude},${longitude}`,
+        latitude,
+        longitude,
         size: 1,
         userId,
       });
+
+      // Fetch baseline soil data from SoilGrids
+      const soilData = await this.soilGridsService.fetchSoilGridsData(latitude, longitude);
+      if (soilData.ph !== undefined) field.baselinePh = soilData.ph;
+      if (soilData.organicCarbon !== undefined) field.baselineOrganicCarbon = soilData.organicCarbon;
+      if (soilData.clayPercent !== undefined) field.baselineClayPercent = soilData.clayPercent;
+      if (soilData.sandPercent !== undefined) field.baselineSandPercent = soilData.sandPercent;
+
       field = await this.fieldsRepository.save(field);
     }
 

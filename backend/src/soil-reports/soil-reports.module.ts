@@ -5,9 +5,10 @@ import { Field } from '../entities/field.entity';
 import { SoilReportsService } from './soil-reports.service';
 import { SoilReportsController } from './soil-reports.controller';
 import { OpenMeteoService } from './open-meteo.service';
+import { FieldsModule } from '../fields/fields.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SoilReport, Field])],
+  imports: [TypeOrmModule.forFeature([SoilReport, Field]), FieldsModule],
   providers: [SoilReportsService, OpenMeteoService],
   controllers: [SoilReportsController],
 })
